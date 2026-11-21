@@ -1,0 +1,20 @@
+/NOPR
+*ABB,SAVE_DB ,SAVE
+*ABB,RESUM_DB,RESUME
+*ABB,QUIT    ,Fnc_/EXIT
+*ABB,POWRGRPH,Fnc_/GRAPHICS
+*ABB,KEYPOINT,kplo
+*ABB,LINE,lplo
+*ABB,NODES,nplo
+*ABB,ELEMENTS,eplo
+*ABB,KNUM    ,/pnum,kp,1
+*ABB,KNUM_OFF,/pnum,kp,0
+*ABB,LNUM    ,/pnum,line,1
+*ABB,LNUM_OFF,/pnum,line,0
+*ABB,NNUM    ,/pnum,node,1
+*ABB,NNUM_OFF,/pnum,node,0
+*ABB,ENUM    ,/pnum,element,1
+*ABB,ENUM_OFF,/pnum,element,0
+
+
+/GO 

@@ -1,0 +1,55 @@
+/CLEAR, NOSTART
+/PREP7
+
+! --- 1. Définition des Matériaux ---
+MP,EX,1,200000        ! Acier (MPa)
+MP,PRXY,1,0.3
+MP,EX,2,105000        ! Laiton (MPa)
+MP,PRXY,2,0.34
+
+! --- 2. Type d'Élément (Crucial de le mettre AVANT les sections) ---
+ET,1,LINK180          ! Élément barre 3D
+
+! --- 3. Sections (Calculées rigoureusement) ---
+! Aire AB = pi * r^2 = pi * 15^2
+SECTYPE,1,LINK,,Tige_AB
+SECDATA,706.858
+
+! Aire BC = pi * r^2 = pi * 25^2
+SECTYPE,2,LINK,,Tige_BC
+SECDATA,1963.495
+
+! --- 4. Géométrie ---
+N,1,0,0,0             ! C (Fixe)
+N,2,0,300,0           ! B
+N,3,0,550,0           ! A
+
+! --- 5. Création des Éléments avec attributs ---
+TYPE,1
+MAT,2
+SECNUM,2
+E,1,2                 ! Tige BC (Laiton)
+
+MAT,1
+SECNUM,1
+E,2,3                 ! Tige AB (Acier)
+
+! --- 6. Conditions et Charges ---
+D,1,ALL,0             ! Encastrement en C
+F,3,FY,-30000         ! Charge P en A
+F,2,FY,-40000         ! Charge en B
+
+/ESHAPE,1             ! Active la visualisation 3D des sections
+EPLOT                 ! Affiche les éléments
+FINISH
+
+! --- 7. Solution ---
+/SOLU
+SOLVE
+FINISH
+
+! --- 8. Post-Traitement ---
+/POST1
+SET,LAST
+PLDISP,1              ! Affiche la forme déformée (en blanc) vs non-déformée (en gris)
+PRNSOL,U,Y            ! Liste les valeurs de déflexion verticales

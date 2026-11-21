@@ -1,0 +1,67 @@
+! ==========================================
+! PROBLEME 2 : VERSION CORRIGEE ET TESTEE
+! ==========================================
+/CLEAR, NOSTART
+/PREP7
+
+! 1. ELEMENT ET MATERIAU
+! ----------------------
+ET,1,LINK180            ! Element Barre
+MP,EX,1,29E6            ! Acier 29 Mpsi
+MP,PRXY,1,0.3           ! Poisson
+
+! 2. PROPRIETES DE LA SECTION (METHODE ROBUSTE)
+! ---------------------------------------------
+! Au lieu de laisser ANSYS calculer, on impose la valeur exacte.
+! Aire = 0.3436 in^2 (Calculée par pi/4 * (1^2 - 0.75^2))
+! On utilise "R" (Real Constant) comme vos amis, c'est plus sûr ici.
+R,1,0.3436
+
+! 3. GEOMETRIE (NOEUDS)
+! ---------------------
+N,1,0,0,0     ! A
+N,2,3,0,0     ! B
+N,3,6,0,0     ! C
+N,4,9,0,0     ! D
+
+! 4. MAILLAGE
+! -----------
+TYPE,1
+MAT,1
+REAL,1        ! On appelle la constante R définie plus haut
+E,1,2         ! Element AB
+E,2,3         ! Element BC
+E,3,4         ! Element CD
+
+! 5. CONDITIONS AUX LIMITES (D)
+! -----------------------------
+D,1,UX,0.0            ! A est bloqué
+D,4,UX,-0.008         ! D est compressé de 0.008
+
+! 6. CHARGES (F)
+! --------------
+F,2,FX,-8000          ! 8 kips vers la gauche
+F,3,FX,6000           ! 6 kips vers la droite
+
+FINISH
+
+! ==========================================
+! SOLUTION
+! ==========================================
+/SOLU
+ANTYPE,0              ! Analyse statique
+SOLVE
+FINISH
+
+! ==========================================
+! POST-TRAITEMENT (VERIFICATION)
+! ==========================================
+/POST1
+PRRSOL,F              ! Affiche les réactions
+
+! Calcul et affichage direct pour vérification immédiate
+*GET,REAC_A,NODE,1,RF,FX
+*GET,REAC_D,NODE,4,RF,FX
+
+*MSG,INFO,REAC_A,REAC_D
+Resultats: Reaction A = %G lb (Attendu: ~12191) / Reaction D = %G lb (Attendu: -10191)
